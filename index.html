@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bewerbungsformular - Polizei</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        h2 {
+            text-align: center;
+            color: #0056b3;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 100px; /* Größere Textbereiche */
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #003f7d;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Bewerbungsformular - Polizei</h2>
+        <form id="polizei-form">
+            <div class="form-group">
+                <label for="full-name">Vor- und Nachname:</label>
+                <input type="text" id="full-name" name="full_name" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Alter:</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+            <div class="form-group">
+                <label for="number">Nummer:</label>
+                <input type="text" id="number" name="number" required>
+            </div>
+            <div class="form-group">
+                <label for="discord-name">Discord Name:</label>
+                <input type="text" id="discord-name" name="discord_name" required>
+            </div>
+            <div class="form-group">
+                <label for="strengths">3 Stärken:</label>
+                <textarea id="strengths" name="strengths" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="weaknesses">2 Schwächen:</label>
+                <textarea id="weaknesses" name="weaknesses" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="department">Für welchen Polizeidienst bewerben Sie sich:</label>
+                <select id="department" name="department" required>
+                    <option value="SchutzPolizei">SchutzPolizei</option>
+                    <option value="Kripo">Kripo</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="experience">Erfahrung im Beruf:</label>
+                <textarea id="experience" name="experience" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="motivation">Bewerbungstext (Motivation):</label>
+                <textarea id="motivation" name="motivation" placeholder="Warum möchten Sie sich für die Polizei bewerben?" required></textarea>
+            </div>
+            <button type="button" id="submit-button">Bewerbung absenden</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('submit-button').addEventListener('click', async () => {
+            const fullName = document.getElementById('full-name').value;
+            const age = document.getElementById('age').value;
+            const number = document.getElementById('number').value;
+            const discordName = document.getElementById('discord-name').value;
+            const strengths = document.getElementById('strengths').value;
+            const weaknesses = document.getElementById('weaknesses').value;
+            const department = document.getElementById('department').value;
+            const experience = document.getElementById('experience').value;
+            const motivation = document.getElementById('motivation').value;
+
+            if (!fullName || !age || !number || !discordName || !strengths || !weaknesses || !department || !experience || !motivation) {
+                alert('Bitte füllen Sie alle Felder aus.');
+                return;
+            }
+
+            const webhookUrl = 'https://discord.com/api/webhooks/1324967138238267393/ViV2r4FC2N44uJeJquZJe9H6noNslGJ8J4C2BYJc8p1MdyWSClOAffTn-Iq9t7SjLpFx'; // Ersetze mit deinem Webhook-Link
+
+            const payload = {
+                embeds: [
+                    {
+                        title: 'Neue Polizeibewerbung',
+                        fields: [
+                            { name: 'Vor- und Nachname', value: fullName },
+                            { name: 'Alter', value: age },
+                            { name: 'Nummer', value: number },
+                            { name: 'Discord Name', value: discordName },
+                            { name: '3 Stärken', value: strengths },
+                            { name: '2 Schwächen', value: weaknesses },
+                            { name: 'Polizeidienst', value: department },
+                            { name: 'Erfahrung im Beruf', value: experience },
+                            { name: 'Bewerbungstext (Motivation)', value: motivation }
+                        ],
+                        color: 3447003
+                    }
+                ]
+            };
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    alert('Bewerbung erfolgreich gesendet!');
+                    document.getElementById('polizei-form').reset();
+                } else {
+                    alert('Fehler beim Senden der Bewerbung. Bitte überprüfen Sie die Webhook-URL.');
+                }
+            } catch (error) {
+                console.error('Fehler:', error);
+                alert('Ein Fehler ist aufgetreten. Bitte überprüfen Sie Ihre Internetverbindung.');
+            }
+        });
+    </script>
+</body>
+</html>
